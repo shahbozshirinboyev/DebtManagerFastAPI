@@ -8,12 +8,14 @@ fastapi = "*"
 uvicorn = "*"
 psycopg2 = "*"
 alembic = "*"
-python-dotenv = "*"
-passlib = {extras = ["bcrypt"], version = "*"}
-python-jose = {extras = ["cryptography"], version = "*"}
 sqlalchemy = "*"
 sqlalchemy-utils = "*"
 psycopg2-binary = "*"
+passlib = {extras = ["bcrypt"], version = "*"}
+python-jose = {extras = ["cryptography"], version = "*"}
+pydantic = {extras = ["email"], version = "*"}
+python-multipart = "*"
+python-dotenv = "*"
 
 [dev-packages]
 

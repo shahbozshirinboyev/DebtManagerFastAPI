@@ -1,13 +1,19 @@
 from fastapi import FastAPI
-from routers import auth, debts, settings, monitoring
+from database import engine, Base
+import models
+from routers import users, debts, settings, monitoring
 
-app = FastAPI(title="DebtManager API")
+# Create tables (dev) — productionda alembic ishlatish tavsiya etiladi
+Base.metadata.create_all(bind=engine)
 
-app.include_router(auth.router, prefix="/api/auth", tags=["Auth"])
-app.include_router(debts.router, prefix="/api/debts", tags=["Debts"])
-app.include_router(settings.router, prefix="/api/settings", tags=["Settings"])
-app.include_router(monitoring.router, prefix="/api/monitoring", tags=["Monitoring"])
+app = FastAPI(title="Debt Manager API")
+
+# include routers
+app.include_router(users.router)
+app.include_router(debts.router)
+app.include_router(settings.router)
+app.include_router(monitoring.router)
 
 @app.get("/")
-def read_root():
-    return {"message": "DebtManagerAPI is working... 🚀"}
+def home():
+    return {"message": "Debt Manager API ishlayapti"}
