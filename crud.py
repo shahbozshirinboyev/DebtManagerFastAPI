@@ -53,7 +53,7 @@ def upsert_setting(db: Session, user_id: int, setting_in: schemas.SettingCreate)
 
 # --- Debts ---
 def create_debt(db: Session, debt_in: schemas.DebtCreate, user_id: int):
-    start_date = debt_in.start_date or datetime.utcnow()
+    # Create the debt with all required fields
     d = models.Debt(
         user_id=user_id,
         debt_type=debt_in.debt_type,
@@ -61,9 +61,10 @@ def create_debt(db: Session, debt_in: schemas.DebtCreate, user_id: int):
         amount=debt_in.amount,
         currency=debt_in.currency,
         description=debt_in.description,
-        start_date=start_date,
-        due_date=debt_in.due_date
+        due_date=debt_in.due_date,
+        # start_date and created_at will be set automatically by the model
     )
+    
     db.add(d)
     db.commit()
     db.refresh(d)

@@ -45,5 +45,6 @@ class Debt(Base):
     description = Column(Text, nullable=True)
     start_date = Column(DateTime, default=datetime.utcnow)
     due_date = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
 
     user = relationship("User", back_populates="debts")

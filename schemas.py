@@ -52,8 +52,12 @@ class RefreshToken(BaseModel):
 
 # --- Debt ---
 class DebtBase(BaseModel):
+    person_name: str
     amount: float
+    currency: str = "UZS"
     description: Optional[str] = None
+    debt_type: str  # 'owed_to' or 'owed_by'
+    due_date: Optional[datetime] = None
 
 
 class DebtCreate(DebtBase):
@@ -61,14 +65,15 @@ class DebtCreate(DebtBase):
 
 
 class DebtUpdate(DebtBase):
-    is_paid: Optional[bool] = None
+    pass
 
 
 class DebtResponse(DebtBase):
     id: int
     user_id: int
-    is_paid: bool
     created_at: datetime
+    start_date: datetime
+    due_date: Optional[datetime] = None
 
     model_config = {"from_attributes": True}
 
