@@ -39,14 +39,29 @@ def create_user(db: Session, user_in: schemas.UserCreate):
 def get_setting(db: Session, user_id: int):
     return db.query(models.Setting).filter(models.Setting.user_id == user_id).first()
 
-def upsert_setting(db: Session, user_id: int, setting_in: schemas.SettingCreate):
+def upsert_setting(db: Session, user_id: int, setting_in: schemas.SettingUpdate):
     s = get_setting(db, user_id)
     if not s:
-        s = models.Setting(user_id=user_id, default_currency=setting_in.default_currency, reminder_time=setting_in.reminder_time)
+        # Create new settings with default values if not exists
+        s = models.Setting(
+            user_id=user_id,
+            notifications_enabled=getattr(setting_in, 'notifications_enabled', True),
+            theme=getattr(setting_in, 'theme', 'light'),
+            default_currency=getattr(setting_in, 'default_currency', 'UZS'),
+            reminder_time=getattr(setting_in, 'reminder_time', None),
+            reminder_enabled=getattr(setting_in, 'reminder_enabled', False)
+        )
         db.add(s)
     else:
-        s.default_currency = setting_in.default_currency
-        s.reminder_time = setting_in.reminder_time
+        # Update only provided fields
+        for field in ['notifications_enabled', 'theme', 'default_currency', 'reminder_enabled']:
+            if hasattr(setting_in, field) and getattr(setting_in, field) is not None:
+                setattr(s, field, getattr(setting_in, field))
+        
+        # Handle reminder_time separately as it can be None
+        if hasattr(setting_in, 'reminder_time'):
+            s.reminder_time = setting_in.reminder_time
+    
     db.commit()
     db.refresh(s)
     return s

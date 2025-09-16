@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Enum
+from sqlalchemy import Boolean, Column, Integer, String, Text, DateTime, ForeignKey, Enum
 from sqlalchemy.orm import relationship, declarative_base
 import enum
 
@@ -28,8 +28,11 @@ class Setting(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), unique=True)
+    notifications_enabled = Column(Boolean, default=True)
+    theme = Column(String, default="light")
     default_currency = Column(String, default="UZS")
     reminder_time = Column(DateTime, nullable=True)
+    reminder_enabled = Column(Boolean, default=False)
 
     user = relationship("User", back_populates="settings")
 

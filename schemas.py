@@ -99,20 +99,36 @@ class DebtResponse(DebtBase):
 # --- Setting ---
 class SettingBase(BaseModel):
     notifications_enabled: bool = True
-    # theme uchun Optional bo'lishi shart emas — default "light"
     theme: str = "light"
+    default_currency: str = "UZS"
+    reminder_time: Optional[datetime] = None
+    reminder_enabled: bool = False
 
 
 class SettingCreate(SettingBase):
     pass
 
 
-class SettingUpdate(SettingBase):
-    pass
+class SettingUpdate(BaseModel):
+    notifications_enabled: Optional[bool] = None
+    theme: Optional[str] = None
+    default_currency: Optional[str] = None
+    reminder_time: Optional[datetime] = None
+    reminder_enabled: Optional[bool] = None
 
 
 class SettingResponse(SettingBase):
     id: int
     user_id: int
-
-    model_config = {"from_attributes": True}
+    
+    model_config = {
+        "from_attributes": True,
+        "json_schema_extra": {
+            "example": {
+                "id": 1,
+                "user_id": 1,
+                "notifications_enabled": True,
+                "theme": "light"
+            }
+        }
+    }
