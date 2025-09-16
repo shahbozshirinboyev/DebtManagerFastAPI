@@ -64,8 +64,26 @@ class DebtCreate(DebtBase):
     pass
 
 
-class DebtUpdate(DebtBase):
-    pass
+class DebtUpdate(BaseModel):
+    person_name: Optional[str] = None
+    amount: Optional[float] = None
+    currency: Optional[str] = None
+    description: Optional[str] = None
+    debt_type: Optional[str] = None  # 'owed_to' or 'owed_by'
+    due_date: Optional[datetime] = None
+    
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "person_name": "John Doe",
+                "amount": 100000,
+                "currency": "UZS",
+                "description": "Qarz haqida izoh",
+                "debt_type": "owed_to",
+                "due_date": "2025-12-31T23:59:59"
+            }
+        }
+    }
 
 
 class DebtResponse(DebtBase):

@@ -74,13 +74,13 @@ def update_debt(db: Session, debt_id: int, user_id: int, debt_in: schemas.DebtUp
     d = db.query(models.Debt).filter(models.Debt.id == debt_id, models.Debt.user_id == user_id).first()
     if not d:
         return None
-    d.debt_type = debt_in.debt_type
-    d.person_name = debt_in.person_name
-    d.amount = debt_in.amount
-    d.currency = debt_in.currency
-    d.description = debt_in.description
-    d.start_date = debt_in.start_date or d.start_date
-    d.due_date = debt_in.due_date
+    
+    # Only update fields that were provided in the request
+    update_data = debt_in.model_dump(exclude_unset=True)
+    
+    for field, value in update_data.items():
+        setattr(d, field, value)
+    
     db.commit()
     db.refresh(d)
     return d

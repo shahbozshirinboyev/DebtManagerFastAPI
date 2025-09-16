@@ -10,8 +10,11 @@ def add_debt(payload: schemas.DebtCreate, current_user = Depends(auth.get_curren
     d = crud.create_debt(db, payload, current_user.id)
     return d
 
-@router.put("/{debt_id}", response_model=schemas.DebtResponse)
-def edit_debt(debt_id: int, payload: schemas.DebtUpdate, current_user = Depends(auth.get_current_user), db: Session = Depends(database.get_db)):
+@router.patch("/{debt_id}", response_model=schemas.DebtResponse)
+def partial_update_debt(debt_id: int, payload: schemas.DebtUpdate, current_user = Depends(auth.get_current_user), db: Session = Depends(database.get_db)):
+    """
+    Partial update of a debt. Only include fields you want to update.
+    """
     d = crud.update_debt(db, debt_id, current_user.id, payload)
     if not d:
         raise HTTPException(status_code=404, detail="Debt not found")
