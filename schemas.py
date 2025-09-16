@@ -34,9 +34,20 @@ class UserResponse(UserBase):
 
 
 # --- Token ---
-class Token(BaseModel):
+class TokenBase(BaseModel):
     access_token: str
-    token_type: str
+    token_type: str = "bearer"
+    refresh_token: Optional[str] = None
+
+class Token(TokenBase):
+    pass
+
+class TokenResponse(TokenBase):
+    """Response model for token endpoints"""
+    pass
+
+class RefreshToken(BaseModel):
+    refresh_token: str
 
 
 # --- Debt ---
